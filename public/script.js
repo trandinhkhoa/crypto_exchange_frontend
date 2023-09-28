@@ -31,9 +31,38 @@ function updateTable(tableId, data, columns) {
 
 
 var currentPriceWs = createWebSocket('/ws/currentPrice');
+var currentPriceBuffer = null;
+var previousPrice = null;
+
 currentPriceWs.onmessage = function(event) {
-    document.getElementById('currentPrice').innerText = event.data;
+    currentPriceBuffer = event.data;  // Store new price in buffer
 };
+
+setInterval(function() {
+    if (currentPriceBuffer !== null) {  // Check if there's a new price in buffer
+        var priceElement = document.getElementById('currentPrice');
+        var price = parseFloat(currentPriceBuffer);
+        currentPriceBuffer = null;  // Clear the buffer
+
+        if (!isNaN(price)) {  // Check if price is a number
+            priceElement.innerText = price.toFixed(2);
+
+            if (previousPrice !== null) {  // Check if there's a previous price to compare
+                if (price > previousPrice) {
+                    priceElement.style.color = 'green';
+                } else if (price < previousPrice) {
+                    priceElement.style.color = 'red';
+                }
+            }
+
+            previousPrice = price;  // Update previous price for next comparison
+        } else {
+            priceElement.innerText = currentPriceBuffer;  // If not a number, just display the text
+            priceElement.style.color = '';  // Reset color
+        }
+    }
+}, 200);
+
 
 var lastTradesWs = createWebSocket('/ws/lastTrades');
 lastTradesWs.onmessage = function(event) {
