@@ -1,26 +1,7 @@
-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-}
-.column {
-    width: 30%;
-}
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.table th, .table td {
-    border: 1px solid #000;
-    padding: 3px;
-    text-align: left;
-}
 .best-sells {
     background-color: #ffe6e6;
 }
 .best-buys {
     background-color: #e6ffe6;
 }
+
