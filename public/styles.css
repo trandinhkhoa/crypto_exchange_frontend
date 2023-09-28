@@ -5,3 +5,7 @@
     background-color: #e6ffe6;
 }
 
+
+.container {
+    max-width: 90%;  /* Adjust this value to your preference */
+}

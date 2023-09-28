@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container custom-container">
     <div class="row">
         <div class="col-md-4">
             <h2 class="mb-4">Current Price: <span id="currentPrice"></span></h2>
@@ -19,9 +19,15 @@
             <table class="table table-striped table-hover table-bordered best-buys" id="bestBuysTable"></table>
         </div>
         <div class="col-md-4"></div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-5">
             <h2 class="mb-2">Last Trades</h2>
-            <table class="table table-striped table-hover table-bordered" id="lastTradesTable"></table>
+            <table class="table table-striped table-hover table-bordered" id="lastTradesTable">
+                <colgroup>
+                    <col class="price-col">
+                    <col>
+                    <col>
+                </colgroup>
+            </table>
         </div>
     </div>
 </div>

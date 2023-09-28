@@ -17,12 +17,18 @@ function updateTable(tableId, data, columns) {
         var row = document.createElement('tr');
         columns.forEach(column => {
             var td = document.createElement('td');
-            td.innerText = item[column];
+            var value = item[column];
+            if (!isNaN(value) && column !== 'Timestamp') {  // Check if value is a number and not a Timestamp
+                td.innerText = parseFloat(value).toFixed(2);
+            } else {
+                td.innerText = value;
+            }
             row.appendChild(td);
         });
         table.appendChild(row);
     });
 }
+
 
 var currentPriceWs = createWebSocket('/ws/currentPrice');
 currentPriceWs.onmessage = function(event) {
