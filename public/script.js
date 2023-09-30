@@ -8,26 +8,44 @@ function updateTable(tableId, data, columns) {
     table.innerHTML = '';
     var headerRow = document.createElement('tr');
     columns.forEach(column => {
-        var th = document.createElement('th');
-        th.innerText = column;
-        headerRow.appendChild(th);
+        if (column !== 'IsBuyerMaker') {  // Skip IsBuyerMaker column header
+            var th = document.createElement('th');
+            th.innerText = column;
+            headerRow.appendChild(th);
+        }
     });
     table.appendChild(headerRow);
     data.forEach(item => {
         var row = document.createElement('tr');
         columns.forEach(column => {
-            var td = document.createElement('td');
-            var value = item[column];
-            if (!isNaN(value) && column !== 'Timestamp') {  // Check if value is a number and not a Timestamp
-                td.innerText = parseFloat(value).toFixed(2);
-            } else {
-                td.innerText = value;
+            if (column !== 'IsBuyerMaker') {  // Skip IsBuyerMaker column data
+                var td = document.createElement('td');
+                var value = item[column];
+                if (!isNaN(value) && column !== 'Timestamp') {  // Check if value is a number and not a Timestamp
+                    td.innerText = parseFloat(value).toFixed(2);
+                } else {
+                    td.innerText = value;
+                }
+                row.appendChild(td);
             }
-            row.appendChild(td);
         });
+        // Set the row background color based on the IsBuyerMaker value
+        if (tableId === 'lastTradesTable') {
+            row.style.backgroundColor = item.IsBuyerMaker ? '#e6ffe6' : '#ffe6e6';
+        }
         table.appendChild(row);
     });
 }
+
+// ... rest of your code ...
+
+var lastTradesWs = createWebSocket('/ws/lastTrades');
+lastTradesWs.onmessage = function(event) {
+    var data = JSON.parse(event.data);
+    updateTable('lastTradesTable', data, ['Price', 'Size', 'IsBuyerMaker', 'Timestamp']);  // Keep IsBuyerMaker here for color coding
+};
+
+
 
 
 var currentPriceWs = createWebSocket('/ws/currentPrice');
@@ -67,7 +85,8 @@ setInterval(function() {
 var lastTradesWs = createWebSocket('/ws/lastTrades');
 lastTradesWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
-    updateTable('lastTradesTable', data, ['Price', 'Size', 'Timestamp']);
+    console.log(data)
+    updateTable('lastTradesTable', data, ['Price', 'Size', 'IsBuyerMaker', 'Timestamp']);
 };
 
 var bestSellsWs = createWebSocket('/ws/bestSells');
