@@ -23,6 +23,19 @@ function updateTable(tableId, data, columns) {
                 var value = item[column];
                 if (!isNaN(value) && column !== 'Timestamp') {  // Check if value is a number and not a Timestamp
                     td.innerText = parseFloat(value).toFixed(2);
+                } else if (column === 'Timestamp') {
+                    var totalMilliseconds = Math.floor(value / 1000000); // Convert nanoseconds to milliseconds
+
+                    // Create a new Date object with the milliseconds
+                    var date = new Date(totalMilliseconds);
+
+                    var hours = date.getUTCHours().toString().padStart(2, '0');
+                    var minutes = date.getUTCMinutes().toString().padStart(2, '0');
+                    var seconds = date.getUTCSeconds().toString().padStart(2, '0');
+                    var millis = date.getUTCMilliseconds().toString().padStart(3, '0');
+
+                    var formattedTime = `${hours}:${minutes}:${seconds}.${millis}`;
+                    td.innerText = formattedTime;
                 } else {
                     td.innerText = value;
                 }
@@ -31,7 +44,7 @@ function updateTable(tableId, data, columns) {
         });
         // Set the row background color based on the IsBuyerMaker value
         if (tableId === 'lastTradesTable') {
-            row.style.backgroundColor = item.IsBuyerMaker ? '#e6ffe6' : '#ffe6e6';
+            row.style.backgroundColor = !item.IsBuyerMaker ? '#e6ffe6' : '#ffe6e6';
         }
         table.appendChild(row);
     });
