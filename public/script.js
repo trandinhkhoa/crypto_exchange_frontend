@@ -50,8 +50,6 @@ function updateTable(tableId, data, columns) {
     });
 }
 
-// ... rest of your code ...
-
 var lastTradesWs = createWebSocket('/ws/lastTrades');
 lastTradesWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
@@ -94,11 +92,105 @@ setInterval(function() {
     }
 }, 200);
 
+document.getElementById('limitBuyButton').addEventListener('click', function() {
+    placeLimitOrder(true);
+});
+
+document.getElementById('limitSellButton').addEventListener('click', function() {
+    placeLimitOrder(false);
+});
+
+document.getElementById('marketBuyButton').addEventListener('click', function() {
+    placeMarketOrder(true);
+});
+document.getElementById('marketSellButton').addEventListener('click', function() {
+    placeMarketOrder(false);
+});
+
+function placeLimitOrder(isBid) {
+    // Gather the input values
+    var priceInput = isBid ? document.getElementById('limitBuyPrice') : document.getElementById('limitSellPrice');
+    var sizeInput = isBid ? document.getElementById('limitBuyQuantity') : document.getElementById('limitSellQuantity');
+    var price = parseFloat(priceInput.value);
+    var size = parseFloat(sizeInput.value);
+
+    // Validate the inputs (you can add more validation logic here)
+    if (isNaN(price) || isNaN(size)) {
+        alert('Invalid price or size');
+        return;
+    }
+
+    // Prepare the request payload
+    var payload = {
+        "UserId": "me",  // Hardcoded for now
+        "OrderType": "LIMIT",
+        "IsBid": isBid,
+        "Size": size,
+        "Price": price,
+        "Ticker": "ETHUSD"  // Hardcoded for now
+    };
+
+    // Send the request to place the order
+    fetch('http://localhost:3000/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response (you can add more logic here)
+        console.log('Order response:', data);
+    })
+    .catch(error => {
+        // Handle errors
+        console.log('Error:', error);
+    });
+}
+
+function placeMarketOrder(isBid) {
+    // Gather the input values
+    var sizeInput = isBid ? document.getElementById('marketBuyQuantity') : document.getElementById('marketSellQuantity');
+    var size = parseFloat(sizeInput.value);
+
+    // Validate the inputs (you can add more validation logic here)
+    if (isNaN(size)) {
+        alert('Invalid size');
+        return;
+    }
+
+    // Prepare the request payload
+    var payload = {
+        "UserId": "me",  // Hardcoded for now
+        "OrderType": "MARKET",
+        "IsBid": isBid,
+        "Size": size,
+        "Ticker": "ETHUSD"  // Hardcoded for now
+    };
+
+    // Send the request to place the order
+    fetch('http://localhost:3000/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response (you can add more logic here)
+        console.log('Order response:', data);
+    })
+    .catch(error => {
+        // Handle errors
+        console.log('Error:', error);
+    });
+}
 
 var lastTradesWs = createWebSocket('/ws/lastTrades');
 lastTradesWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
-    console.log(data)
     updateTable('lastTradesTable', data, ['Price', 'Size', 'IsBuyerMaker', 'Timestamp']);
 };
 
@@ -113,3 +205,59 @@ bestBuysWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
     updateTable('bestBuysTable', data, ['Price', 'Volume']);
 };
+
+var userInfoWs = createWebSocket('/ws/userInfo?userId=me');
+userInfoWs.onmessage = function(event) {
+    var data = JSON.parse(event.data);
+
+    // Get the table body element
+    var tableBody = document.getElementById('balanceBody');
+
+    // Clear the existing table body
+    tableBody.innerHTML = '';
+
+    // Populate the table with new data
+    for (var currency in data.Balance) {
+        var row = document.createElement('tr');
+        var cell1 = document.createElement('td');
+        var cell2 = document.createElement('td');
+
+        cell1.innerText = currency;
+        cell2.innerText = data.Balance[currency];
+
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        tableBody.appendChild(row);
+    }
+};
+
+
+// tab switch
+document.addEventListener('DOMContentLoaded', (event) => {
+    const tabs = document.querySelectorAll('.nav-link');
+    const tabContents = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Remove active classes from all tabs
+            tabs.forEach((t) => {
+                t.classList.remove('active');
+            });
+
+            // Add active class to clicked tab
+            tab.classList.add('active');
+
+            // Hide all tab content
+            tabContents.forEach((content) => {
+                content.classList.remove('show', 'active');
+            });
+
+            // Show clicked tab content
+            const target = tab.getAttribute('aria-controls');
+            const content = document.getElementById(target);
+            content.classList.add('show', 'active');
+        });
+    });
+});

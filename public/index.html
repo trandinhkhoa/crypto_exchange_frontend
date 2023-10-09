@@ -18,7 +18,94 @@
             <h2 class="mb-2 mt-4">Best Buys</h2>
             <table class="table table-striped table-hover table-bordered best-buys" id="bestBuysTable"></table>
         </div>
-        <div class="col-md-4"></div>
+        <!-- Existing Second Column -->
+        <div class="col-md-4">
+            <!-- Username -->
+            <h3>Me</h3>
+
+            <!-- Balance Table -->
+            <h4>Balance</h4>
+            <table class="table table-striped table-hover table-bordered" id="balanceTable">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="balanceBody">
+                    <!-- Data will be filled here from the backend -->
+                </tbody>
+            </table>
+
+            <!-- Trade Inputs -->
+            <ul class="nav nav-tabs" id="orderTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="limit-tab" data-toggle="tab" href="#limit" role="tab" aria-controls="limit" aria-selected="true">Limit</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="market-tab" data-toggle="tab" href="#market" role="tab" aria-controls="market" aria-selected="false">Market</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="orderTabsContent">
+                <!-- Limit Order Tab -->
+                <div class="tab-pane fade show active" id="limit" role="tabpanel" aria-labelledby="limit-tab">
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" id="limitBuyPrice" placeholder="Buy Limit Price">
+                            <input type="number" id="limitBuyQuantity" placeholder="Buy Limit Quantity">
+                            <div>
+                                <button id="limitBuyButton" class="btn custom-button buy-button">BUY</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="number" id="limitSellPrice" placeholder="Sell Limit Price">
+                            <input type="number" id="limitSellQuantity" placeholder="Sell Limit Quantity">
+                            <div>
+                                <button id="limitSellButton" class="btn custom-button sell-button">SELL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Market Order Tab -->
+                <div class="tab-pane fade" id="market" role="tabpanel" aria-labelledby="market-tab">
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" id="marketBuyQuantity" placeholder="Buy Market Quantity">
+                            <div>
+                                <button id="marketBuyButton" class="btn custom-button buy-button">BUY</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input type="number" id="marketSellQuantity" placeholder="Sell Market Quantity">
+                            <div>
+                                <button id="marketSellButton" class="btn custom-button sell-button">SELL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Open Orders List -->
+            <h4>Open Orders List</h4>
+            <table class="table table-striped table-hover table-bordered" id="openOrdersTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Trading Pair</th>
+                        <th>Action</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Total</th>
+                        <th>Cancel</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody">
+                    <!-- Data will be filled here from the backend -->
+                </tbody>
+            </table>
+        </div>
+
         <div class="col-md-4 mt-5">
             <h2 class="mb-2">Last Trades</h2>
             <table class="table table-striped table-hover table-bordered" id="lastTradesTable">
@@ -35,3 +122,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+

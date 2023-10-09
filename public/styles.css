@@ -9,3 +9,48 @@
 .container {
     max-width: 90%;  /* Adjust this value to your preference */
 }
+
+.nav-link.active, .tab-pane.show.active {
+    background-color: #cfe2ff !important;
+}
+.tab-pane {
+    padding: 15px;
+}
+/* Custom styling for buttons */
+.custom-button {
+    padding: 3px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    color: white;
+}
+
+/* Specific styling for BUY button */
+.buy-button {
+    background-color: #4CAF50;
+}
+
+.buy-button:hover {
+    background-color: #45a049;
+    color: white;
+}
+
+.buy-button:active {
+    background-color: #3e8e41;
+}
+
+/* Specific styling for SELL button */
+.sell-button {
+    background-color: #f44336;
+}
+
+.sell-button:hover {
+    background-color: #da190b;
+    color: white;
+}
+
+.sell-button:active {
+    background-color: #c21807;
+}
