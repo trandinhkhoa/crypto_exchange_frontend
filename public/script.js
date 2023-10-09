@@ -210,6 +210,7 @@ var userInfoWs = createWebSocket('/ws/userInfo?userId=me');
 userInfoWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
+    console.log("HOLA", data)
     // Get the table body element
     var tableBody = document.getElementById('balanceBody');
 
@@ -229,7 +230,76 @@ userInfoWs.onmessage = function(event) {
         row.appendChild(cell2);
         tableBody.appendChild(row);
     }
+    updateOpenOrdersList(data.OpenOrders);
 };
+
+function updateOpenOrdersList(orders) {
+    var table = document.getElementById('openOrdersTable');
+    var tbody = document.getElementById('ordersBody');
+    tbody.innerHTML = '';
+
+    orders.forEach(function(order) {
+        var row = document.createElement('tr');
+
+        // Convert timestamp to date
+        var timestamp = new Date(order.Timestamp / 1000000);
+        var dateCell = document.createElement('td');
+        dateCell.innerText = timestamp.toDateString();
+        row.appendChild(dateCell);
+
+        // Hardcoded Trading Pair
+        var tradingPairCell = document.createElement('td');
+        tradingPairCell.innerText = "ETHUSD";
+        row.appendChild(tradingPairCell);
+
+        // Action (buy/sell)
+        var actionCell = document.createElement('td');
+        actionCell.innerText = order.IsBid ? 'Buy' : 'Sell';
+        row.appendChild(actionCell);
+
+        // Price
+        var priceCell = document.createElement('td');
+        priceCell.innerText = order.Price;
+        row.appendChild(priceCell);
+
+        // Amount (Size)
+        var sizeCell = document.createElement('td');
+        sizeCell.innerText = order.Size;
+        row.appendChild(sizeCell);
+
+        // Total
+        var totalCell = document.createElement('td');
+        totalCell.innerText = (order.Price * order.Size).toFixed(2) + ' USD';
+        row.appendChild(totalCell);
+
+        // Cancel Button
+        var cancelCell = document.createElement('td');
+        var cancelButton = document.createElement('button');
+        cancelButton.innerText = 'Cancel';
+        cancelButton.onclick = function() {
+            fetch(`http://localhost:3000/order/ETHUSD/${order.ID}`, {
+                method: 'DELETE',
+                // Other fetch options if needed
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Remove the row from the table
+                    row.remove();
+                } else {
+                    console.log('Failed to cancel the order');
+                }
+            })
+            .catch(error => {
+                console.log('An error occurred while cancelling order:', error);
+            });
+        };
+        cancelCell.appendChild(cancelButton);
+        row.appendChild(cancelCell);
+
+        tbody.appendChild(row);
+    });
+}
+
 
 
 // tab switch
