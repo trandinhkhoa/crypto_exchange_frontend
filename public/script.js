@@ -210,7 +210,11 @@ var userInfoWs = createWebSocket('/ws/userInfo?userId=me');
 userInfoWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
-    console.log("HOLA", data)
+    updateBalanceTable(data.Balance)
+    updateOpenOrdersList(data.OpenOrders);
+};
+
+function updateBalanceTable(balance) {
     // Get the table body element
     var tableBody = document.getElementById('balanceBody');
 
@@ -218,21 +222,20 @@ userInfoWs.onmessage = function(event) {
     tableBody.innerHTML = '';
 
     // Populate the table with new data
-    for (var currency in data.Balance) {
+    for (var currency in balance) {
         var row = document.createElement('tr');
         var cell1 = document.createElement('td');
         var cell2 = document.createElement('td');
 
         cell1.innerText = currency;
-        cell2.innerText = data.Balance[currency];
+        cell2.innerText = balance[currency].toFixed(2);
 
         row.appendChild(cell1);
         row.appendChild(cell2);
         tableBody.appendChild(row);
     }
-    updateOpenOrdersList(data.OpenOrders);
-};
 
+}
 function updateOpenOrdersList(orders) {
     var table = document.getElementById('openOrdersTable');
     var tbody = document.getElementById('ordersBody');
