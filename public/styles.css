@@ -54,3 +54,11 @@
 .sell-button:active {
     background-color: #c21807;
 }
+
+.col-md-4 {
+    height: 100%;
+}
+
+#openOrderArea {
+    margin-top: 30px;
+}

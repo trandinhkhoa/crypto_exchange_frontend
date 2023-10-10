@@ -209,6 +209,7 @@ bestBuysWs.onmessage = function(event) {
 var userInfoWs = createWebSocket('/ws/userInfo?userId=me');
 userInfoWs.onmessage = function(event) {
     var data = JSON.parse(event.data);
+    console.log("HOLA ", data)
 
     updateBalanceTable(data.Balance)
     updateOpenOrdersList(data.OpenOrders);
